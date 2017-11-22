@@ -82,7 +82,7 @@ def intsim(in_img,ant,freq,myres):
 
     angres=(1/maxuv)*(180/np.pi)
     print("Current angular resolution =",angres,"deg")
-    print("Angular size in the sky=",angres*width,"deg") # needs work
+#    print("Angular size in the sky=",angres*width,"deg") # needs work
     print("Max. baseline for selected resolution =",wavel*maxuv,"m")
 
     # Transform image to Fourier space, then multiply with uv mask and then apply the inverse FFT to reconstruct image
@@ -96,19 +96,38 @@ def intsim(in_img,ant,freq,myres):
 
 
 
-    f, axarr = plt.subplots(2, 2, figsize=(10,10))
-    axarr[0,0].imshow(in_img);
+    f, axarr = plt.subplots(2, 3, figsize=(16,10));
+    axarr[0,0].imshow(in_img,cmap='Greens');
+    axarr[0,0].set_title('Original')
+
+    axarr[0,1].scatter(x*wavel*maxuv/bmax,y*wavel*maxuv/bmax,s=100);
+    axarr[0,1].set_xlabel("x (m)");
+    axarr[0,1].set_ylabel("y (m)");
+    axarr[0,1].axis("equal");
+    axarr[0,1].set_title('Antenna array')
+
+    axarr[0,2].plot(ore_u.astype(int),ore_v.astype(int),'.',color='red');
+    axarr[0,2].set_xlabel('Gridded u [k$\lambda$]',size='10');
+    axarr[0,2].set_ylabel('Gridded v [k$\lambda$]',size='10');
+    axarr[0,2].set_title('Gridded visibilities')
 
 
 
-    axarr[0,1].plot(ore_u.astype(int),ore_v.astype(int),'.',color='orange')
-    axarr[0,1].set_xlabel('Gridded u [k$\lambda$]',size='10')
-    axarr[0,1].set_ylabel('Gridded v [k$\lambda$]',size='10')
-
-    axarr[1,0].imshow(obs_uv_matrix); # mask
-
-    axarr[1,1].imshow(real_ifft_img);
 
 
+    axarr[1,0].imshow(np.log10(np.abs(fft_img.real)),cmap='Reds');
+    axarr[1,0].set_xlim(0,500);
+    axarr[1,0].set_ylim(0,500);
+    axarr[1,0].set_title('FT of original')
 
+
+    axarr[1,1].plot(ore_u.astype(int),ore_v.astype(int),'.',color='red'); # mask
+    axarr[1,1].set_xlim(0,500);
+    axarr[1,1].set_ylim(0,500);
+    axarr[1,1].set_xlabel('Gridded u [k$\lambda$]',size='10');
+    axarr[1,1].set_ylabel('Gridded v [k$\lambda$]',size='10');
+    axarr[1,1].set_title('Gridded visibilities')
+
+    axarr[1,2].imshow(real_ifft_img,cmap='Greens');
+    axarr[1,2].set_title('Reconstructed image')
 
