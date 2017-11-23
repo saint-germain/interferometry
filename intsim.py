@@ -1,12 +1,18 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-def intsim(in_img,ant,freq,myres):
+def intsim(ant,freq,myres,EW=False,PointSource=False,filein="palomas.png"):
+    in_img=plt.imread(filein)[:,:,0]
+    if PointSource:
+        t = np.linspace(-500, 500, 1000)
+        bump = np.exp(-0.0005*t**2)
+        bump = bump / np.trapz(bump) # normalize the integral to 1
+        kernel = bump[:, np.newaxis] * bump[np.newaxis, :]
+        in_img=kernel
     if in_img.shape[0]!=in_img.shape[1]:
         print("Error: Input image must have equal number of rows and colums")
         print("Current size = ",in_img.shape)
-#        break find out how to give exception
-    
+
     width=in_img.shape[0] 
     
     if ant<=1:
@@ -47,6 +53,10 @@ def intsim(in_img,ant,freq,myres):
     y=bmax*dny
     lx=np.zeros((ant,ant))
     ly=np.zeros((ant,ant))
+
+    if EW :
+        x=np.linspace(0,1,ant)*bmax
+        y=np.zeros(ant)
 
     # calculate relative positions between antennae (baselines for the visibilities)
     for i in range(ant):
@@ -113,9 +123,9 @@ def intsim(in_img,ant,freq,myres):
 
 
 
-
-
-    axarr[1,0].imshow(np.log10(np.abs(fft_img.real)),cmap='Reds');
+    
+    with np.errstate(divide='ignore',invalid='ignore'):
+        axarr[1,0].imshow(np.log10(np.abs(fft_img.real)),cmap='Reds');
     axarr[1,0].set_xlim(0,500);
     axarr[1,0].set_ylim(0,500);
     axarr[1,0].set_title('FT of original')
