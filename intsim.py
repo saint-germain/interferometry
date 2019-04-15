@@ -107,7 +107,7 @@ def intsim(ant,freq,myres,EW=False,PointSource=False,filein="palomas.png"):
 
 
     f, axarr = plt.subplots(2, 3, figsize=(16,10));
-    axarr[0,0].imshow(in_img,cmap='Greens');
+    axarr[0,0].imshow(in_img,cmap='hot');
     axarr[0,0].set_title('Original')
 
     axarr[0,1].scatter(x*wavel*maxuv/bmax,y*wavel*maxuv/bmax,s=100);
@@ -138,6 +138,6 @@ def intsim(ant,freq,myres,EW=False,PointSource=False,filein="palomas.png"):
     axarr[1,1].set_ylabel('Gridded v [k$\lambda$]',size='10');
     axarr[1,1].set_title('Gridded visibilities')
 
-    axarr[1,2].imshow(real_ifft_img,cmap='Greens');
+    axarr[1,2].imshow(real_ifft_img,cmap='hot');
     axarr[1,2].set_title('Reconstructed image')
 
